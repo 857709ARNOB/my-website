@@ -168,7 +168,7 @@
         // Toggle form visibility when Add Data button is clicked
         document.getElementById('addButton').addEventListener('click', function() {
             const form = document.getElementById('shipmentForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
         });
 
         // Function to download the data as a CSV file
