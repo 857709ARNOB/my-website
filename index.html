@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit and View Data</title>
+    <title>Shipment Data Submission</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,63 +12,127 @@
         form {
             margin-bottom: 20px;
         }
-        input, button {
+        input, select, button {
             padding: 10px;
             margin: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
-    <h1>Submit Your Data</h1>
-    <form id="dataForm">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br><br>
+    <h1>Shipment Data Submission</h1>
+    <form id="shipmentForm">
+        <label for="buyer">Buyer:</label>
+        <input type="text" id="buyer" name="buyer" required><br><br>
+
+        <label for="style">Style/Article:</label>
+        <input type="text" id="style" name="style" required><br><br>
+
+        <label for="orderNo">PO/Order No:</label>
+        <input type="text" id="orderNo" name="orderNo" required><br><br>
+
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" required><br><br>
+
+        <label for="color">Color:</label>
+        <input type="text" id="color" name="color" required><br><br>
+
+        <label for="orderQty">Order Quantity:</label>
+        <input type="number" id="orderQty" name="orderQty" required><br><br>
+
+        <label for="shipDate">Ship Date:</label>
+        <input type="date" id="shipDate" name="shipDate" required><br><br>
+
         <button type="submit">Submit</button>
     </form>
 
     <h2>Submitted Data</h2>
-    <ul id="dataList">
-        <!-- Submitting data will appear here -->
-    </ul>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Buyer</th>
+                <th>Style/Article</th>
+                <th>PO/Order No</th>
+                <th>Country</th>
+                <th>Color</th>
+                <th>Order Quantity</th>
+                <th>Ship Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Submitted data will be displayed here -->
+        </tbody>
+    </table>
 
     <script>
-        // Check if there is any data in localStorage
-        document.addEventListener('DOMContentLoaded', function () {
-            loadData();
-        });
+        // Load data from localStorage on page load
+        document.addEventListener('DOMContentLoaded', loadData);
 
         // Handle form submission
-        document.getElementById('dataForm').addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent the form from refreshing the page
+        document.getElementById('shipmentForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
 
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            // Get form values
+            const buyer = document.getElementById('buyer').value;
+            const style = document.getElementById('style').value;
+            const orderNo = document.getElementById('orderNo').value;
+            const country = document.getElementById('country').value;
+            const color = document.getElementById('color').value;
+            const orderQty = document.getElementById('orderQty').value;
+            const shipDate = document.getElementById('shipDate').value;
 
-            // Store the form data in localStorage
-            const formData = { name: name, email: email };
-            let storedData = JSON.parse(localStorage.getItem('formData')) || [];
-            storedData.push(formData);
-            localStorage.setItem('formData', JSON.stringify(storedData));
+            // Create an object to store the data
+            const shipmentData = {
+                buyer: buyer,
+                style: style,
+                orderNo: orderNo,
+                country: country,
+                color: color,
+                orderQty: orderQty,
+                shipDate: shipDate
+            };
 
-            // Reset the form
-            document.getElementById('dataForm').reset();
+            // Get the existing data from localStorage, or initialize it if empty
+            let storedData = JSON.parse(localStorage.getItem('shipmentData')) || [];
+            
+            // Add the new data to the stored data array
+            storedData.push(shipmentData);
 
-            // Reload the data
+            // Save the updated data back to localStorage
+            localStorage.setItem('shipmentData', JSON.stringify(storedData));
+
+            // Clear the form
+            document.getElementById('shipmentForm').reset();
+
+            // Reload the table with the updated data
             loadData();
         });
 
-        // Function to load data from localStorage and display it
+        // Function to load data from localStorage and display it in a table
         function loadData() {
-            const dataList = document.getElementById('dataList');
-            dataList.innerHTML = '';  // Clear previous data
-            const storedData = JSON.parse(localStorage.getItem('formData')) || [];
+            const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            dataTable.innerHTML = ''; // Clear the table before reloading data
+            const storedData = JSON.parse(localStorage.getItem('shipmentData')) || [];
 
-            storedData.forEach((data) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `Name: ${data.name}, Email: ${data.email}`;
-                dataList.appendChild(listItem);
+            // Loop through the stored data and create table rows
+            storedData.forEach(function(data) {
+                const row = dataTable.insertRow();
+                row.insertCell(0).textContent = data.buyer;
+                row.insertCell(1).textContent = data.style;
+                row.insertCell(2).textContent = data.orderNo;
+                row.insertCell(3).textContent = data.country;
+                row.insertCell(4).textContent = data.color;
+                row.insertCell(5).textContent = data.orderQty;
+                row.insertCell(6).textContent = data.shipDate;
             });
         }
     </script>
