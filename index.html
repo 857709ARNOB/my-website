@@ -3,10 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website</title>
+    <title>Submit and View Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to My Website</h1>
-    <p>This is a simple GitHub Pages website.</p>
+    <h1>Submit Your Data</h1>
+    <form id="dataForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Submitted Data</h2>
+    <ul id="dataList">
+        <!-- Submitting data will appear here -->
+    </ul>
+
+    <script>
+        // Check if there is any data in localStorage
+        document.addEventListener('DOMContentLoaded', function () {
+            loadData();
+        });
+
+        // Handle form submission
+        document.getElementById('dataForm').addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the form from refreshing the page
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            // Store the form data in localStorage
+            const formData = { name: name, email: email };
+            let storedData = JSON.parse(localStorage.getItem('formData')) || [];
+            storedData.push(formData);
+            localStorage.setItem('formData', JSON.stringify(storedData));
+
+            // Reset the form
+            document.getElementById('dataForm').reset();
+
+            // Reload the data
+            loadData();
+        });
+
+        // Function to load data from localStorage and display it
+        function loadData() {
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = '';  // Clear previous data
+            const storedData = JSON.parse(localStorage.getItem('formData')) || [];
+
+            storedData.forEach((data) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Name: ${data.name}, Email: ${data.email}`;
+                dataList.appendChild(listItem);
+            });
+        }
+    </script>
 </body>
 </html>
