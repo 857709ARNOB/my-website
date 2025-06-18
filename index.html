@@ -11,6 +11,7 @@
         }
         form {
             margin-bottom: 20px;
+            display: none; /* Initially hidden */
         }
         input, select, button {
             padding: 10px;
@@ -26,10 +27,35 @@
             text-align: left;
             border: 1px solid #ddd;
         }
+        #addButton {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #downloadButton {
+            padding: 10px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #searchInput {
+            margin-top: 10px;
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
     <h1>Shipment Data Submission</h1>
+
+    <!-- Add Data Button -->
+    <button id="addButton">Add Data</button>
+
+    <!-- Search Option -->
+    <input type="text" id="searchInput" placeholder="Search by Buyer or Style" oninput="searchData()">
+
     <form id="shipmentForm">
         <label for="buyer">Buyer:</label>
         <input type="text" id="buyer" name="buyer" required><br><br>
@@ -54,6 +80,9 @@
 
         <button type="submit">Submit</button>
     </form>
+
+    <!-- Download Data Button -->
+    <button id="downloadButton" onclick="downloadCSV()">Download Data</button>
 
     <h2>Submitted Data</h2>
     <table id="dataTable">
@@ -134,6 +163,50 @@
                 row.insertCell(5).textContent = data.orderQty;
                 row.insertCell(6).textContent = data.shipDate;
             });
+        }
+
+        // Toggle form visibility when Add Data button is clicked
+        document.getElementById('addButton').addEventListener('click', function() {
+            const form = document.getElementById('shipmentForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Function to download the data as a CSV file
+        function downloadCSV() {
+            const storedData = JSON.parse(localStorage.getItem('shipmentData')) || [];
+            let csvContent = "Buyer,Style/Article,PO/Order No,Country,Color,Order Quantity,Ship Date\n";
+            
+            storedData.forEach(function(data) {
+                csvContent += `${data.buyer},${data.style},${data.orderNo},${data.country},${data.color},${data.orderQty},${data.shipDate}\n`;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", "shipment_data.csv");
+                link.click();
+            }
+        }
+
+        // Function to search the data
+        function searchData() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            const rows = dataTable.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let showRow = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(searchInput)) {
+                        showRow = true;
+                        break;
+                    }
+                }
+                rows[i].style.display = showRow ? '' : 'none';
+            }
         }
     </script>
 </body>
