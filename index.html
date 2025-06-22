@@ -1,52 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>My First Web Page</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link to external CSS -->
+    <title>শিশুদের কুইজ সিস্টেম</title>
+    <link rel="stylesheet" href="style.css"> <!-- External CSS link -->
 </head>
-
 <body>
 
-    <!-- Header Section -->
-    <header>
-        <h1>Welcome to My Web Page!</h1>
-    </header>
+    <div id="quiz-container">
+        <h1>শিশুদের কুইজ সিস্টেম</h1>
+        <p id="question"></p>
+        <div id="answers">
+            <button onclick="submitAnswer('a')">A</button>
+            <button onclick="submitAnswer('b')">B</button>
+            <button onclick="submitAnswer('c')">C</button>
+            <button onclick="submitAnswer('d')">D</button>
+        </div>
+        <p id="score"></p>
+        <button id="next-question-btn" onclick="nextQuestion()" style="display:none;">পরবর্তী প্রশ্ন</button>
+    </div>
 
-    <!-- Main Content Section -->
-    <main>
-        <section>
-            <h2>About Me</h2>
-            <p>Hello! I'm a beginner web developer, and this is my first web page. I'm learning HTML, CSS, and JavaScript.</p>
-        </section>
-
-        <section>
-            <h2>My Favorite Things</h2>
-            <ul>
-                <li>Reading Books</li>
-                <li>Coding</li>
-                <li>Traveling</li>
-                <li>Playing Music</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Contact</h2>
-            <p>If you'd like to get in touch with me, feel free to <a href="mailto:your-email@example.com">email me</a>.</p>
-        </section>
-    </main>
-
-    <!-- Footer Section -->
-    <footer>
-        <p>&copy; 2025 My Web Page</p>
-    </footer>
-
-    <!-- External JavaScript File -->
-    <script src="script.js"></script>
-
+    <script src="quiz.js"></script> <!-- External JavaScript link -->
 </body>
-
 </html>
