@@ -1,92 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animal Puzzle Game</title>
-  <style>
-    .puzzle-container {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-gap: 5px;
-      width: 315px;
-      margin: 20px auto;
-    }
-
-    .puzzle-piece {
-      width: 100px;
-      height: 100px;
-      background-color: #f1f1f1;
-      border: 1px solid #ddd;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .puzzle-piece img {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My First Web Page</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to external CSS -->
 </head>
+
 <body>
 
-<h2>Animal Puzzle Game</h2>
-<div class="puzzle-container" id="puzzle-container"></div>
+    <!-- Header Section -->
+    <header>
+        <h1>Welcome to My Web Page!</h1>
+    </header>
 
-<script>
-  const pieces = [
-    'puzzle-1.jpg', 'puzzle-2.jpg', 'puzzle-3.jpg',
-    'puzzle-4.jpg', 'puzzle-5.jpg', 'puzzle-6.jpg',
-    'puzzle-7.jpg', 'puzzle-8.jpg', 'puzzle-9.jpg'
-  ];
-  let shuffledPieces = [];
+    <!-- Main Content Section -->
+    <main>
+        <section>
+            <h2>About Me</h2>
+            <p>Hello! I'm a beginner web developer, and this is my first web page. I'm learning HTML, CSS, and JavaScript.</p>
+        </section>
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    }
-  }
+        <section>
+            <h2>My Favorite Things</h2>
+            <ul>
+                <li>Reading Books</li>
+                <li>Coding</li>
+                <li>Traveling</li>
+                <li>Playing Music</li>
+            </ul>
+        </section>
 
-  function createPuzzle() {
-    shuffleArray(pieces);
-    const puzzleContainer = document.getElementById('puzzle-container');
-    puzzleContainer.innerHTML = '';
+        <section>
+            <h2>Contact</h2>
+            <p>If you'd like to get in touch with me, feel free to <a href="mailto:your-email@example.com">email me</a>.</p>
+        </section>
+    </main>
 
-    pieces.forEach((piece, index) => {
-      const puzzlePiece = document.createElement('div');
-      puzzlePiece.classList.add('puzzle-piece');
-      puzzlePiece.setAttribute('data-index', index);
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 My Web Page</p>
+    </footer>
 
-      const img = document.createElement('img');
-      img.src = piece;  // Add path to your image pieces
-      img.draggable = true;
-      img.addEventListener('dragstart', handleDragStart);
-      puzzlePiece.appendChild(img);
-      
-      puzzleContainer.appendChild(puzzlePiece);
-    });
-  }
-
-  function handleDragStart(e) {
-    e.dataTransfer.setData('text', e.target.parentElement.getAttribute('data-index'));
-  }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    const draggedIndex = e.dataTransfer.getData('text');
-    const targetIndex = e.target.getAttribute('data-index');
-
-    if (draggedIndex === targetIndex) {
-      const draggedElement = document.querySelector(`[data-index="${draggedIndex}"]`);
-      e.target.appendChild(draggedElement.querySelector('img'));
-    }
-  }
-
-  createPuzzle();
-</script>
+    <!-- External JavaScript File -->
+    <script src="script.js"></script>
 
 </body>
+
 </html>
