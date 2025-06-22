@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Sheets Data Integration</title>
-    <script src="https://cdn.jsdelivr.net/npm/tabletop@1.6.1"></script>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sliding Puzzle Game</title>
+  <style>
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      width: 320px;
+      height: 320px;
+    }
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-color: lightblue;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>Google Sheets Data</h1>
-    
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here -->
-        </tbody>
-    </table>
 
-    <script>
-        // Initialize Tabletop.js
-        window.onload = function () {
-            Tabletop.init({
-                key: '12dSoWSBl2kcT6F5qhDbuFoyIfzkf-vhA1kSlQZAfCoQ',  // Your Google Sheets file ID
-                callback: displayData,   // Callback function to handle data
-                simpleSheet: true        // Use this if your Google Sheets is simple and doesn't have headers
-            });
-        };
+<h1>Sliding Puzzle</h1>
+<div class="grid" id="grid"></div>
 
-        // Function to display the data from Google Sheets
-        function displayData(data) {
-            const tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
-            data.forEach(function(row) {
-                const tr = document.createElement('tr');
-                Object.values(row).forEach(function(cellData) {
-                    const td = document.createElement('td');
-                    td.textContent = cellData;
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
-            });
-        }
-    </script>
+<script>
+  const grid = document.getElementById('grid');
+  let tiles = [...Array(9).keys()]; // 0 to 8
+
+  // Create the grid
+  function createGrid() {
+    grid.innerHTML = '';
+    tiles.forEach((tile, index) => {
+      const tileDiv = document.createElement('div');
+      tileDiv.classList.add('tile');
+      if (tile !== 0) {
+        tileDiv.textContent = tile + 1;
+      }
+      tileDiv.addEventListener('click', () => moveTile(index));
+      grid.appendChild(tileDiv);
+    });
+  }
+
+  // Shuffle the tiles
+  function shuffleTiles() {
+    tiles = tiles.sort(() => Math.random() - 0.5);
+    createGrid();
+  }
+
+  // Move tile
+  function moveTile(index) {
+    const emptyIndex = tiles.indexOf(0);
+    const isAdjacent = [1, -1, 3, -3].includes(index - emptyIndex); // Check if the tile is adjacent to the empty space
+
+    if (isAdjacent) {
+      tiles[emptyIndex] = tiles[index];
+      tiles[index] = 0;
+      createGrid();
+    }
+  }
+
+  // Initialize the game
+  shuffleTiles();
+</script>
+
 </body>
 </html>
