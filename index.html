@@ -3,70 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sliding Puzzle Game</title>
+  <title>Animal Puzzle Game</title>
   <style>
-    .grid {
+    .puzzle-container {
       display: grid;
       grid-template-columns: repeat(3, 100px);
       grid-gap: 5px;
-      width: 320px;
-      height: 320px;
+      width: 315px;
+      margin: 20px auto;
     }
-    .tile {
+
+    .puzzle-piece {
       width: 100px;
       height: 100px;
-      background-color: lightblue;
+      background-color: #f1f1f1;
+      border: 1px solid #ddd;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 24px;
-      cursor: pointer;
+    }
+
+    .puzzle-piece img {
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
 <body>
 
-<h1>Sliding Puzzle</h1>
-<div class="grid" id="grid"></div>
+<h2>Animal Puzzle Game</h2>
+<div class="puzzle-container" id="puzzle-container"></div>
 
 <script>
-  const grid = document.getElementById('grid');
-  let tiles = [...Array(9).keys()]; // 0 to 8
+  const pieces = [
+    'puzzle-1.jpg', 'puzzle-2.jpg', 'puzzle-3.jpg',
+    'puzzle-4.jpg', 'puzzle-5.jpg', 'puzzle-6.jpg',
+    'puzzle-7.jpg', 'puzzle-8.jpg', 'puzzle-9.jpg'
+  ];
+  let shuffledPieces = [];
 
-  // Create the grid
-  function createGrid() {
-    grid.innerHTML = '';
-    tiles.forEach((tile, index) => {
-      const tileDiv = document.createElement('div');
-      tileDiv.classList.add('tile');
-      if (tile !== 0) {
-        tileDiv.textContent = tile + 1;
-      }
-      tileDiv.addEventListener('click', () => moveTile(index));
-      grid.appendChild(tileDiv);
-    });
-  }
-
-  // Shuffle the tiles
-  function shuffleTiles() {
-    tiles = tiles.sort(() => Math.random() - 0.5);
-    createGrid();
-  }
-
-  // Move tile
-  function moveTile(index) {
-    const emptyIndex = tiles.indexOf(0);
-    const isAdjacent = [1, -1, 3, -3].includes(index - emptyIndex); // Check if the tile is adjacent to the empty space
-
-    if (isAdjacent) {
-      tiles[emptyIndex] = tiles[index];
-      tiles[index] = 0;
-      createGrid();
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
     }
   }
 
-  // Initialize the game
-  shuffleTiles();
+  function createPuzzle() {
+    shuffleArray(pieces);
+    const puzzleContainer = document.getElementById('puzzle-container');
+    puzzleContainer.innerHTML = '';
+
+    pieces.forEach((piece, index) => {
+      const puzzlePiece = document.createElement('div');
+      puzzlePiece.classList.add('puzzle-piece');
+      puzzlePiece.setAttribute('data-index', index);
+
+      const img = document.createElement('img');
+      img.src = piece;  // Add path to your image pieces
+      img.draggable = true;
+      img.addEventListener('dragstart', handleDragStart);
+      puzzlePiece.appendChild(img);
+      
+      puzzleContainer.appendChild(puzzlePiece);
+    });
+  }
+
+  function handleDragStart(e) {
+    e.dataTransfer.setData('text', e.target.parentElement.getAttribute('data-index'));
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+    const draggedIndex = e.dataTransfer.getData('text');
+    const targetIndex = e.target.getAttribute('data-index');
+
+    if (draggedIndex === targetIndex) {
+      const draggedElement = document.querySelector(`[data-index="${draggedIndex}"]`);
+      e.target.appendChild(draggedElement.querySelector('img'));
+    }
+  }
+
+  createPuzzle();
 </script>
 
 </body>
